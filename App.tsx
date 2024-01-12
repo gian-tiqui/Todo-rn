@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   FlatList,
+  Alert,
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
@@ -23,7 +24,7 @@ const TodoView = ({todo, index}: {todo: Todo; index: number}) => {
           <Text style={styles.todoContainerText}>Edit</Text>
         </TouchableOpacity>
         <TouchableOpacity>
-          <Text style={styles.todoContainerText}>Edit</Text>
+          <Text style={styles.todoContainerText}>Delete</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -32,9 +33,18 @@ const TodoView = ({todo, index}: {todo: Todo; index: number}) => {
 
 const TodoScreen = () => {
   const [todos, setTodos]: [Todo[], any] = React.useState([]);
-  const [todo, setTodo]: [string, any] = React.useState('');
+  const [todo, setTodo]: [string, (str: string) => void] = React.useState('');
 
-  const handleAddTodo = () => {};
+  const handleAddTodo = () => {
+    const newTodo: Todo = {
+      id: todo.length + 1,
+      todo: todo,
+    };
+
+    setTodos([...todos, newTodo]);
+
+    Alert.alert('Todo Added');
+  };
 
   const renderTodos = ({item, index}: {item: Todo; index: number}) => {
     return <TodoView todo={item} index={index} />;
@@ -44,16 +54,7 @@ const TodoScreen = () => {
     setTodo(str);
   };
 
-  React.useEffect(() => {
-    const mTodos: Todo[] = [
-      {id: 1, todo: 'First todo'},
-      {id: 2, todo: 'Second todo'},
-      {id: 3, todo: 'Third todo'},
-      {id: 4, todo: 'Fourth todo'},
-    ];
-
-    setTodos(mTodos);
-  }, []);
+  React.useEffect(() => {}, []);
 
   return (
     <View style={styles.container}>
@@ -70,7 +71,11 @@ const TodoScreen = () => {
         <Text style={styles.buttonText}>Add</Text>
       </TouchableOpacity>
 
-      <FlatList data={todos} renderItem={renderTodos} />
+      <FlatList
+        data={todos}
+        renderItem={renderTodos}
+        keyExtractor={item => item.id.toString()}
+      />
     </View>
   );
 };
@@ -95,6 +100,7 @@ const styles = StyleSheet.create({
     color: '#000000',
     paddingHorizontal: 20,
     marginBottom: 20,
+    fontSize: 25,
   },
   text: {
     color: '#000000',
