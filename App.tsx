@@ -15,50 +15,121 @@ interface Todo {
   todo: string;
 }
 
-const TodoView = ({todo, index}: {todo: Todo; index: number}) => {
+type TodoViewProps = {
+  todo: Todo;
+  index: number;
+  onDelete: (index: number) => void;
+  onEdit: (id: number) => void;
+  editMode: boolean;
+};
+
+type TodoRendererProps = {
+  item: Todo;
+  index: number;
+};
+
+const TodoView = ({todo, index, onDelete, onEdit, editMode}: TodoViewProps) => {
+  const truncatedTodo =
+    todo.todo.length > 25 ? `${todo.todo.slice(0, 19)}...` : todo.todo;
+
   return (
     <View style={styles.todoContainer} key={index}>
-      <Text style={styles.todoContainerText}>{todo.todo}</Text>
-      <View style={styles.buttonsContainer}>
-        <TouchableOpacity>
-          <Text style={styles.todoContainerText}>Edit</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.todoContainerText}>Delete</Text>
-        </TouchableOpacity>
-      </View>
+      <Text style={styles.todoContainerText}>
+        {index + 1}. {truncatedTodo}
+      </Text>
+      {!editMode && (
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity>
+            <Text
+              style={styles.todoContainerText}
+              onPress={() => onEdit(todo.id)}>
+              Edit
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => onDelete(index)}>
+            <Text style={styles.todoContainerText}>Delete</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
 
 const TodoScreen = () => {
-  const [todos, setTodos]: [Todo[], any] = React.useState([]);
-  const [todo, setTodo]: [string, (str: string) => void] = React.useState('');
+  const [todos, setTodos] = React.useState<Todo[]>([]);
+  const [todo, setTodo] = React.useState<string>('');
+  const [editMode, setEditMode] = React.useState<boolean>(false);
+  const [todoId, setTodoId] = React.useState<number>(0);
 
   const handleAddTodo = () => {
+    if (!todo) {
+      Alert.alert('Please enter something');
+      return;
+    }
+
     const newTodo: Todo = {
-      id: todo.length + 1,
+      id: todos.length + 1,
       todo: todo,
     };
 
     setTodos([...todos, newTodo]);
+    setTodo('');
 
     Alert.alert('Todo Added');
-  };
-
-  const renderTodos = ({item, index}: {item: Todo; index: number}) => {
-    return <TodoView todo={item} index={index} />;
   };
 
   const handleChangeText = (str: string) => {
     setTodo(str);
   };
 
-  React.useEffect(() => {}, []);
+  const handleDelete = (index: number): void => {
+    setTodos((prevTodos: Todo[]) => prevTodos.filter((_, i) => i !== index));
+  };
+
+  const handleEdit = (id: number): void => {
+    setEditMode(prevMode => {
+      const existingTodo = todos.find(mTodo => mTodo.id === id);
+
+      if (existingTodo) {
+        setTodo(existingTodo.todo.toString());
+        setTodoId(existingTodo.id);
+        return !prevMode;
+      }
+
+      return prevMode;
+    });
+  };
+
+  const handleEditTodo = (): void => {
+    const editedTodo: Todo = {
+      id: todoId,
+      todo: todo,
+    };
+
+    const newTodos: Todo[] = todos.filter(mTodo => mTodo.id !== todoId);
+
+    newTodos.push(editedTodo);
+
+    setTodos(newTodos);
+    setEditMode(prevMode => !prevMode);
+    setTodo('');
+  };
+
+  const renderTodos = ({item, index}: TodoRendererProps) => {
+    return (
+      <TodoView
+        todo={item}
+        index={index}
+        onDelete={handleDelete}
+        onEdit={handleEdit}
+        editMode={editMode}
+      />
+    );
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{todo}</Text>
       <TextInput
         style={styles.input}
         placeholder="What do you want to do later?"
@@ -67,9 +138,15 @@ const TodoScreen = () => {
         onChangeText={handleChangeText}
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleAddTodo}>
-        <Text style={styles.buttonText}>Add</Text>
-      </TouchableOpacity>
+      {!editMode ? (
+        <TouchableOpacity style={styles.button} onPress={handleAddTodo}>
+          <Text style={styles.buttonText}>Add</Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity style={styles.button} onPress={handleEditTodo}>
+          <Text style={styles.buttonText}>Edit</Text>
+        </TouchableOpacity>
+      )}
 
       <FlatList
         data={todos}
@@ -88,7 +165,7 @@ export default App;
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: 25,
     backgroundColor: Colors.white,
     height: '100%',
     width: '100%',
@@ -113,12 +190,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 10,
-    borderRadius: 20,
-    marginBottom: 20,
+    borderRadius: 10,
+    marginBottom: 10,
   },
   buttonText: {
     color: '#ffffff',
     fontSize: 30,
+    fontWeight: 'bold',
   },
   todoContainer: {
     padding: 20,
@@ -133,6 +211,7 @@ const styles = StyleSheet.create({
   todoContainerText: {
     fontSize: 25,
     marginHorizontal: 10,
+    color: Colors.white,
   },
   buttonsContainer: {
     flexDirection: 'row',
