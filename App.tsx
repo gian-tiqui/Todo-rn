@@ -30,7 +30,7 @@ type TodoRendererProps = {
 
 const TodoView = ({todo, index, onDelete, onEdit, editMode}: TodoViewProps) => {
   const truncatedTodo =
-    todo.todo.length > 25 ? `${todo.todo.slice(0, 19)}...` : todo.todo;
+    todo.todo.length > 15 ? `${todo.todo.slice(0, 15)}...` : todo.todo;
 
   return (
     <View style={styles.todoContainer} key={index}>
@@ -40,15 +40,13 @@ const TodoView = ({todo, index, onDelete, onEdit, editMode}: TodoViewProps) => {
       {!editMode && (
         <View style={styles.buttonsContainer}>
           <TouchableOpacity>
-            <Text
-              style={styles.todoContainerText}
-              onPress={() => onEdit(todo.id)}>
+            <Text style={styles.editText} onPress={() => onEdit(todo.id)}>
               Edit
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => onDelete(index)}>
-            <Text style={styles.todoContainerText}>Delete</Text>
+            <Text style={styles.deleteText}>Delete</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -215,5 +213,15 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: 'row',
+  },
+  deleteText: {
+    fontSize: 25,
+    marginHorizontal: 10,
+    color: '#FF0000',
+  },
+  editText: {
+    fontSize: 25,
+    marginHorizontal: 10,
+    color: '#ffffff',
   },
 });
