@@ -21,7 +21,10 @@ type RenderItemProps = {
 
 const renderItem = ({uri, text, text2}: RenderItemProps) => (
   <View style={styles.imageContainer}>
-    <ImageBackground source={{uri: uri}} style={styles.image}>
+    <ImageBackground
+      source={{uri: uri}}
+      style={styles.image}
+      resizeMode="cover">
       <Text style={styles.overlayText1}>{text}</Text>
       <Text style={styles.overlayText2}>{text2}</Text>
       <View style={styles.circle}>
@@ -53,8 +56,10 @@ const TravelApp = () => {
           horizontal={true}
           style={styles.flatList}
         />
-
-        <Text style={styles.textBold2}>Popular Trips</Text>
+        <View style={styles.midComp}>
+          <Text style={styles.textBold2}>Popular Trips</Text>
+          <Text style={styles.seeAll}>See All</Text>
+        </View>
         <FlatList
           data={exampleData}
           renderItem={({item}) => renderItem(item)}
@@ -94,6 +99,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: 'hidden',
     marginRight: 20,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
   },
   overlayText1: {
     color: '#fff',
@@ -133,6 +143,15 @@ const styles = StyleSheet.create({
   },
   flatList: {
     marginVertical: 20,
+  },
+  midComp: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+  seeAll: {
+    color: 'blue',
+    fontSize: 26,
+    marginTop: 25,
   },
 });
 
