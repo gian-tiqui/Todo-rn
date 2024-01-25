@@ -7,8 +7,8 @@ import {
   Text,
   View,
 } from 'react-native';
-import Header from './components/Header/Header';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Header from './components/Header/Header';
 
 const URI =
   'https://i0.wp.com/handluggageonly.co.uk/wp-content/uploads/2018/12/Hand-Luggage-Only-10-5.jpg?w=1600&ssl=1';
@@ -125,7 +125,6 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 50,
     fontWeight: 'bold',
-    marginTop: 25,
   },
   circle: {
     position: 'absolute',
@@ -152,6 +151,8 @@ const styles = StyleSheet.create({
     color: 'blue',
     fontSize: 26,
     marginTop: 25,
+    borderBottomColor: 'blue',
+    borderBottomWidth: 2,
   },
 });
 

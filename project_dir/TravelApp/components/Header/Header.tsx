@@ -5,10 +5,12 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const Header = () => {
   return (
-    <View style={styles.header}>
-      <Ionicons name="reorder-three-outline" color={'black'} size={50} />
-      <Text style={styles.text}>Travel App</Text>
-      <AntDesign name="bells" color={'black'} size={35} />
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <AntDesign name="menuunfold" color={'black'} size={35} />
+        <Text style={styles.text}>Travel App</Text>
+        <AntDesign name="bells" color={'black'} size={35} />
+      </View>
     </View>
   );
 };
@@ -16,14 +18,18 @@ const Header = () => {
 export default Header;
 
 const styles = StyleSheet.create({
-  header: {
+  container: {
     backgroundColor: '#fff',
-    paddingHorizontal: 30,
-    paddingTop: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  header: {
     flexDirection: 'row',
-    gap: 70,
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: 30,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   text: {
     fontSize: 30,
