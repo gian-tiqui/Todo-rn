@@ -7,7 +7,7 @@ const Header = () => {
   return (
     <View style={styles.header}>
       <Ionicons name="reorder-three-outline" color={'black'} size={50} />
-      <Text style={styles.text}>Header</Text>
+      <Text style={styles.text}>Travel App</Text>
       <AntDesign name="bells" color={'black'} size={35} />
     </View>
   );
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     flexDirection: 'row',
     gap: 70,
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
   text: {

@@ -1,8 +1,8 @@
 import React from 'react';
-import TodoScreen from './project_dir/todo/TodoScreen';
+import TravelApp from './project_dir/TravelApp/TravelApp';
 
 const App = () => {
-  return <TodoScreen />;
+  return <TravelApp />;
 };
 
 export default App;
