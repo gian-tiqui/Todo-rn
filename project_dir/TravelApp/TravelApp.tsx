@@ -1,5 +1,12 @@
 import React from 'react';
-import {FlatList, ImageBackground, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  ImageBackground,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import Header from './components/Header/Header';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
@@ -17,26 +24,26 @@ const renderItem = ({uri, text, text2}: RenderItemProps) => (
     <ImageBackground source={{uri: uri}} style={styles.image}>
       <Text style={styles.overlayText1}>{text}</Text>
       <Text style={styles.overlayText2}>{text2}</Text>
-      <View>
-        <AntDesign name="hearto" color={'black'} size={35} />
+      <View style={styles.circle}>
+        <AntDesign name="hearto" color={'grey'} size={30} />
       </View>
     </ImageBackground>
   </View>
 );
 
 const exampleData = [
-  {id: '1', uri: URI, text: 'Bulkan Mayon', text2: 'Bicol'},
-  {id: '2', uri: URI, text: 'Bulkan Mayon', text2: 'Bicol'},
-  {id: '3', uri: URI, text: 'Bulkan Mayon', text2: 'Bicol'},
-  {id: '4', uri: URI, text: 'Bulkan Mayon', text2: 'Bicol'},
-  {id: '5', uri: URI, text: 'Bulkan Mayon', text2: 'Bicol'},
+  {id: '1', uri: URI, text: 'Bulkan Mayon, Bicol', text2: 'Philippines'},
+  {id: '2', uri: URI, text: 'Bulkan Mayon, Bicol', text2: 'Philippines'},
+  {id: '3', uri: URI, text: 'Bulkan Mayon, Bicol', text2: 'Philippines'},
+  {id: '4', uri: URI, text: 'Bulkan Mayon, Bicol', text2: 'Philippines'},
+  {id: '5', uri: URI, text: 'Bulkan Mayon, Bicol', text2: 'Philippines'},
 ];
 
 const TravelApp = () => {
   return (
     <>
       <Header />
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Text style={styles.textBold}>Find your</Text>
         <Text style={styles.text}>Dream Trip</Text>
         <FlatList
@@ -44,22 +51,25 @@ const TravelApp = () => {
           renderItem={({item}) => renderItem(item)}
           keyExtractor={item => item.id}
           horizontal={true}
+          style={styles.flatList}
         />
 
-        <Text style={styles.textBold}>Popular Trips</Text>
+        <Text style={styles.textBold2}>Popular Trips</Text>
         <FlatList
           data={exampleData}
           renderItem={({item}) => renderItem(item)}
           keyExtractor={item => item.id}
           horizontal={true}
+          style={styles.flatList}
         />
         <FlatList
           data={exampleData}
           renderItem={({item}) => renderItem(item)}
           keyExtractor={item => item.id}
           horizontal={true}
+          style={styles.flatList}
         />
-      </View>
+      </ScrollView>
     </>
   );
 };
@@ -89,6 +99,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 30,
     fontWeight: 'bold',
+    position: 'absolute',
     top: 150,
     left: 20,
   },
@@ -96,7 +107,8 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 20,
     fontWeight: 'bold',
-    top: 150,
+    position: 'absolute',
+    top: 180,
     left: 20,
   },
   textBold: {
@@ -104,6 +116,23 @@ const styles = StyleSheet.create({
     fontSize: 50,
     fontWeight: 'bold',
     marginTop: 25,
+  },
+  circle: {
+    position: 'absolute',
+    bottom: 200,
+    right: 20,
+    backgroundColor: '#fff',
+    borderRadius: 50,
+    padding: 10,
+  },
+  textBold2: {
+    color: '#000',
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginTop: 25,
+  },
+  flatList: {
+    marginVertical: 20,
   },
 });
 
