@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Header from './components/Header/Header';
+import Card from './components/Card/Card';
 
 const URI =
   'https://i0.wp.com/handluggageonly.co.uk/wp-content/uploads/2018/12/Hand-Luggage-Only-10-5.jpg?w=1600&ssl=1';
@@ -32,6 +33,10 @@ const renderItem = ({uri, text, text2}: RenderItemProps) => (
       </View>
     </ImageBackground>
   </View>
+);
+
+const renderCard = ({uri, text, text2}: RenderItemProps) => (
+  <Card uri={uri} text={text} text2={text2} />
 );
 
 const exampleData = [
@@ -62,14 +67,14 @@ const TravelApp = () => {
         </View>
         <FlatList
           data={exampleData}
-          renderItem={({item}) => renderItem(item)}
+          renderItem={({item}) => renderCard(item)}
           keyExtractor={item => item.id}
           horizontal={true}
           style={styles.flatList}
         />
         <FlatList
           data={exampleData}
-          renderItem={({item}) => renderItem(item)}
+          renderItem={({item}) => renderCard(item)}
           keyExtractor={item => item.id}
           horizontal={true}
           style={styles.flatList}
