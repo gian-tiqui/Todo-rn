@@ -1,9 +1,9 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import TravelApp from '../../TravelApp';
 import TodoScreen from '../../../todo/TodoScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import Home from '../Home/Home';
 
 const Tab = createBottomTabNavigator();
 
@@ -19,8 +19,8 @@ const BottomTabNavigator = () => {
   return (
     <Tab.Navigator>
       <Tab.Screen
-        name="Travel"
-        component={TravelApp}
+        name="Home"
+        component={Home}
         options={{tabBarIcon: TravelIcon}}
       />
       <Tab.Screen
