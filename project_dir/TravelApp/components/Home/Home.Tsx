@@ -160,43 +160,13 @@ const Home = () => {
   );
 
   useEffect(() => {
-    const exampleData: SampleData[] = [
-      {
-        id: '1',
-        uri: URI,
-        text: 'Mayon, Bicol',
-        text2: 'Philippines',
-        hearts: false,
-      },
-      {
-        id: '2',
-        uri: URI,
-        text: 'Mayon, Bicol',
-        text2: 'Philippines',
-        hearts: false,
-      },
-      {
-        id: '3',
-        uri: URI,
-        text: 'Mayon, Bicol',
-        text2: 'Philippines',
-        hearts: false,
-      },
-      {
-        id: '4',
-        uri: URI,
-        text: 'Mayon, Bicol',
-        text2: 'Philippines',
-        hearts: false,
-      },
-      {
-        id: '5',
-        uri: URI,
-        text: 'Mayon, Bicol',
-        text2: 'Philippines',
-        hearts: false,
-      },
-    ];
+    const exampleData: SampleData[] = Array.from({length: 5}, (_, index) => ({
+      id: (index + 1).toString(),
+      uri: URI,
+      text: 'Mayon, Bicol',
+      text2: 'Philippines',
+      hearts: false,
+    }));
 
     setData(exampleData);
   }, []);
