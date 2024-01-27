@@ -1,9 +1,8 @@
 import React from 'react';
-
-import TravelApp from './project_dir/TravelApp/TravelApp';
+import QuizApp from './project_dir/QuizApp/QuizApp';
 
 const App = () => {
-  return <TravelApp />;
+  return <QuizApp />;
 };
 
 export default App;
