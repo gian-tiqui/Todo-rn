@@ -1,5 +1,5 @@
 import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {createContext} from 'react';
 import {NavigationProp} from '@react-navigation/native';
 import axios from 'axios';
 
@@ -16,10 +16,13 @@ type Question = {
   incorrect_answers: string[];
 };
 
+export const ScoreContext = createContext<number | undefined>(undefined);
+
 const Quiz = ({navigation}: QuizProps) => {
   const [questions, setQuestions] = React.useState([]);
   const [ques, setQues] = React.useState<number>(1);
   const [score, setScore] = React.useState<number>(0);
+  const [answerMounted, setAnswerMounted] = React.useState<boolean>(false);
   const [currentQuestion, setCurrentQuestion] = React.useState<Question>({
     type: '',
     difficulty: '',
@@ -30,32 +33,50 @@ const Quiz = ({navigation}: QuizProps) => {
   });
 
   const getQuiz = async () => {
-    const API_URL = 'https://opentdb.com/api.php?amount=10&type=multiple';
+    const API_URL =
+      'https://opentdb.com/api.php?amount=10&difficulty=easy&type=multiple';
 
     await axios
       .get(API_URL)
       .then(res => {
-        setQuestions(res.data.results);
+        const q = res.data.results;
+        setQuestions(q);
         setCurrentQuestion(questions[ques - 1]);
+        console.log(q);
       })
       .catch(err => console.log(err));
   };
 
+  const checkAllAnswered = () => {
+    console.log(score);
+    return ques === 10;
+  };
+
   const handlePressCorrect = () => {
+    setAnswerMounted(false);
     Alert.alert('Correct');
     setScore(prevScore => prevScore + 1);
     setQues(prevQues => prevQues + 1);
     setCurrentQuestion(questions[ques - 1]);
+
+    if (checkAllAnswered()) {
+      navigation.navigate('Result');
+    }
   };
 
   const handlePressWrong = () => {
+    setAnswerMounted(false);
     Alert.alert('Wrong');
     setQues(prevQues => prevQues + 1);
     setCurrentQuestion(questions[ques - 1]);
+
+    if (checkAllAnswered()) {
+      navigation.navigate('Result');
+    }
   };
 
   const generateRandomNum = () => {
-    return Math.floor(Math.random() * 4);
+    return Math.floor(Math.random() * 3);
   };
 
   React.useEffect(() => {
@@ -66,50 +87,61 @@ const Quiz = ({navigation}: QuizProps) => {
     navigation.navigate('Result');
   };
 
+  const randomNum = generateRandomNum();
+
   return (
-    <View style={styles.container}>
-      {currentQuestion ? (
-        <View style={styles.parent}>
-          <View style={styles.top}>
-            <Text style={styles.question}>
-              Q{ques}. {currentQuestion.question}
-            </Text>
-          </View>
-
-          <View style={styles.options}>
-            {currentQuestion.incorrect_answers.map(
-              (option: string, index: number) => (
-                <TouchableOpacity
-                  key={index}
-                  style={styles.optionButton}
-                  onPress={handlePressWrong}>
-                  <Text style={styles.option}>{option}</Text>
-                </TouchableOpacity>
-              ),
-            )}
-            <TouchableOpacity
-              style={styles.optionButton}
-              onPress={handlePressCorrect}>
-              <Text style={styles.option}>
-                {currentQuestion.correct_answer}
+    <ScoreContext.Provider value={score}>
+      <View style={styles.container}>
+        {currentQuestion ? (
+          <View style={styles.parent}>
+            <View style={styles.top}>
+              <Text style={styles.question}>
+                Q{ques}. {currentQuestion.question}
               </Text>
-            </TouchableOpacity>
-          </View>
+            </View>
 
-          <View style={styles.bottom}>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>SKIP</Text>
-            </TouchableOpacity>
+            <View style={styles.options}>
+              {currentQuestion.incorrect_answers.map(
+                (option: string, index: number) => (
+                  <>
+                    <TouchableOpacity
+                      key={index}
+                      style={styles.optionButton}
+                      onPress={handlePressWrong}>
+                      <Text style={styles.option}>{option}</Text>
+                    </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={handlePressEnd}>
-              <Text style={styles.buttonText}>END</Text>
-            </TouchableOpacity>
+                    {randomNum === index && !answerMounted && (
+                      <TouchableOpacity
+                        style={styles.optionButton}
+                        onPress={handlePressCorrect}>
+                        <Text style={styles.option}>
+                          {currentQuestion.correct_answer} correct
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+                  </>
+                ),
+              )}
+            </View>
+
+            <View style={styles.bottom}>
+              <TouchableOpacity style={styles.button}>
+                <Text style={styles.buttonText}>SKIP</Text>
+              </TouchableOpacity>
+
+              <Text>{score}</Text>
+
+              <TouchableOpacity style={styles.button} onPress={handlePressEnd}>
+                <Text style={styles.buttonText}>END</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      ) : (
-        <Text>no question</Text>
-      )}
-    </View>
+        ) : (
+          <Text>no question</Text>
+        )}
+      </View>
+    </ScoreContext.Provider>
   );
 };
 

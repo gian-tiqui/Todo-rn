@@ -1,15 +1,18 @@
 import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
 import React from 'react';
+import {ScoreContext} from './Quiz';
 
 const Result = ({navigation}: {navigation: NavigationProp<any>}) => {
+  const score = React.useContext(ScoreContext);
+
   const handlePressHome = () => {
     navigation.navigate('Home');
   };
   return (
     <View>
       <View>
-        <Text>Result</Text>
+        <Text>Your scored {score}</Text>
       </View>
       <Image
         source={{
