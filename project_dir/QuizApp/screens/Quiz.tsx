@@ -16,7 +16,7 @@ type Question = {
   incorrect_answers: string[];
 };
 
-export const ScoreContext = createContext<number | undefined>(undefined);
+export const ScoreContext = createContext<number>(6); // y u not working
 
 const Quiz = ({navigation}: QuizProps) => {
   const [questions, setQuestions] = React.useState([]);
@@ -41,8 +41,7 @@ const Quiz = ({navigation}: QuizProps) => {
       .then(res => {
         const q = res.data.results;
         setQuestions(q);
-        setCurrentQuestion(questions[ques - 1]);
-        console.log(q);
+        setCurrentQuestion(q[ques - 1]);
       })
       .catch(err => console.log(err));
   };
@@ -50,6 +49,10 @@ const Quiz = ({navigation}: QuizProps) => {
   const checkAllAnswered = () => {
     console.log(score);
     return ques === 10;
+  };
+
+  const navigateResult = () => {
+    navigation.navigate('Result', {score});
   };
 
   const handlePressCorrect = () => {
@@ -60,7 +63,7 @@ const Quiz = ({navigation}: QuizProps) => {
     setCurrentQuestion(questions[ques - 1]);
 
     if (checkAllAnswered()) {
-      navigation.navigate('Result');
+      navigateResult();
     }
   };
 
@@ -71,7 +74,7 @@ const Quiz = ({navigation}: QuizProps) => {
     setCurrentQuestion(questions[ques - 1]);
 
     if (checkAllAnswered()) {
-      navigation.navigate('Result');
+      navigateResult();
     }
   };
 
@@ -95,9 +98,11 @@ const Quiz = ({navigation}: QuizProps) => {
         {currentQuestion ? (
           <View style={styles.parent}>
             <View style={styles.top}>
-              <Text style={styles.question}>
-                Q{ques}. {currentQuestion.question}
-              </Text>
+              <Text style={styles.question}>Question {ques}</Text>
+            </View>
+
+            <View style={styles.next}>
+              <Text style={styles.question2}>{currentQuestion.question}</Text>
             </View>
 
             <View style={styles.options}>
@@ -116,7 +121,7 @@ const Quiz = ({navigation}: QuizProps) => {
                         style={styles.optionButton}
                         onPress={handlePressCorrect}>
                         <Text style={styles.option}>
-                          {currentQuestion.correct_answer} correct
+                          {currentQuestion.correct_answer}
                         </Text>
                       </TouchableOpacity>
                     )}
@@ -129,8 +134,6 @@ const Quiz = ({navigation}: QuizProps) => {
               <TouchableOpacity style={styles.button}>
                 <Text style={styles.buttonText}>SKIP</Text>
               </TouchableOpacity>
-
-              <Text>{score}</Text>
 
               <TouchableOpacity style={styles.button} onPress={handlePressEnd}>
                 <Text style={styles.buttonText}>END</Text>
@@ -152,12 +155,14 @@ const styles = StyleSheet.create({
     paddingTop: 40,
     paddingHorizontal: 20,
     height: '100%',
+    backgroundColor: '#21436b',
   },
   top: {
     marginVertical: 16,
   },
   options: {
     marginVertical: 16,
+    marginTop: 60,
     flex: 1,
   },
   bottom: {
@@ -176,26 +181,41 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: '700',
     color: 'white',
   },
   question: {
     fontSize: 28,
-    color: 'black',
+    color: '#50a0ff',
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  question2: {
+    fontSize: 28,
+    color: '#50a0ff',
+    textAlign: 'center',
+    fontWeight: '600',
   },
   option: {
     fontSize: 18,
-    fontWeight: '500',
+    fontWeight: '700',
     color: 'white',
   },
   optionButton: {
     paddingVertical: 12,
     marginVertical: 6,
-    backgroundColor: '#34A0A4',
+    backgroundColor: '#50a0ff',
     paddingHorizontal: 12,
     borderRadius: 12,
   },
   parent: {
     height: '100%',
+  },
+  next: {
+    borderColor: '#50a0ff',
+    borderWidth: 2,
+    borderRadius: 10,
+    padding: 30,
+    backgroundColor: '#162c46',
   },
 });
