@@ -1,7 +1,11 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React, {useEffect, useState} from 'react';
 
-const Timer = () => {
+type TimerProps = {
+  onTimerEnd: () => void;
+};
+
+const Timer = ({onTimerEnd}: TimerProps) => {
   const [count, setCount] = useState<number>(5);
 
   useEffect(() => {
@@ -9,6 +13,7 @@ const Timer = () => {
       setCount(prevCount => {
         if (prevCount === 1) {
           clearInterval(interval);
+          onTimerEnd();
           return 5;
         }
         return prevCount - 1;
@@ -19,7 +24,7 @@ const Timer = () => {
       clearInterval(interval);
       setCount(5);
     };
-  }, []);
+  }, [onTimerEnd]);
 
   return (
     <View style={styles.timerContainer}>
@@ -27,6 +32,8 @@ const Timer = () => {
     </View>
   );
 };
+
+export default Timer;
 
 const styles = StyleSheet.create({
   timerContainer: {
@@ -45,5 +52,3 @@ const styles = StyleSheet.create({
     color: '#162c46',
   },
 });
-
-export default Timer;

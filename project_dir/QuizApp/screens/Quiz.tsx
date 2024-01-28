@@ -119,13 +119,17 @@ const Quiz = ({navigation}: QuizProps) => {
     }
   };
 
+  const handleTimerEnd = () => {
+    handleSkip();
+  };
+
   return (
     <View style={styles.container}>
       {currentQuestion ? (
         <View style={styles.parent}>
           <View style={styles.top}>
             <Text style={styles.question}>Question {ques}</Text>
-            <Timer />
+            <Timer onTimerEnd={handleTimerEnd} />
           </View>
 
           <View style={styles.next}>
