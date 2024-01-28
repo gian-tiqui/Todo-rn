@@ -99,13 +99,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#50a0ff',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '50%',
-    height: '50%',
+    width: '70%',
+    height: '60%',
     marginTop: 30,
+    borderColor: '#162c46',
+    borderWidth: 4,
   },
   circleText: {
     fontSize: 100,
     fontWeight: 'bold',
+    color: '#162c46',
   },
   tryAgainButton: {
     width: '100%',

@@ -3,6 +3,7 @@ import React from 'react';
 import {NavigationProp} from '@react-navigation/native';
 import axios from 'axios';
 import {SetScoreContext} from '../navigation/Index';
+import Timer from '../component/Timer';
 
 type QuizProps = {
   navigation: NavigationProp<any>;
@@ -30,7 +31,7 @@ const Quiz = ({navigation}: QuizProps) => {
     incorrect_answers: [],
   });
 
-  let score: number = 0;
+  const score = React.useRef<number>(0);
 
   const setScoreC = React.useContext(SetScoreContext);
 
@@ -41,7 +42,7 @@ const Quiz = ({navigation}: QuizProps) => {
   const navigateResult = async () => {
     await new Promise(resolve => setTimeout(resolve, 0));
     if (setScoreC !== undefined) {
-      setScoreC(score);
+      setScoreC(score.current);
     }
     navigation.navigate('Result');
   };
@@ -51,7 +52,7 @@ const Quiz = ({navigation}: QuizProps) => {
     setQues(prevQues => prevQues + 1);
     setCurrentQuestion(questions[ques - 1]);
 
-    score++;
+    score.current++;
 
     if (checkAllAnswered()) {
       navigateResult();
@@ -75,7 +76,7 @@ const Quiz = ({navigation}: QuizProps) => {
   React.useEffect(() => {
     const getQuiz = async () => {
       const API_URL =
-        'https://opentdb.com/api.php?amount=10&difficulty=easy&type=multiple';
+        'https://opentdb.com/api.php?amount=10&difficulty=easy&type=multiple'; // add difficulty selection here later
 
       try {
         const res = await axios.get(API_URL);
@@ -97,7 +98,7 @@ const Quiz = ({navigation}: QuizProps) => {
 
   const handlePressEnd = () => {
     if (setScoreC !== undefined) {
-      setScoreC(score);
+      setScoreC(score.current);
     }
     navigation.navigate('Result');
   };
@@ -108,12 +109,23 @@ const Quiz = ({navigation}: QuizProps) => {
 
   const randomNum = generateRandomNum();
 
+  const handleSkip = () => {
+    setAnswerMounted(false);
+    setQues(prevQues => prevQues + 1);
+    setCurrentQuestion(questions[ques - 1]);
+
+    if (checkAllAnswered()) {
+      navigateResult();
+    }
+  };
+
   return (
     <View style={styles.container}>
       {currentQuestion ? (
         <View style={styles.parent}>
           <View style={styles.top}>
             <Text style={styles.question}>Question {ques}</Text>
+            <Timer />
           </View>
 
           <View style={styles.next}>
@@ -145,7 +157,7 @@ const Quiz = ({navigation}: QuizProps) => {
           </View>
 
           <View style={styles.bottom}>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={handleSkip}>
               <Text style={styles.buttonText}>SKIP</Text>
             </TouchableOpacity>
 
@@ -172,13 +184,16 @@ export default Quiz;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 40,
+    paddingTop: 10,
     paddingHorizontal: 20,
     height: '100%',
     backgroundColor: '#21436b',
   },
   top: {
     marginVertical: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   options: {
     marginVertical: 16,
@@ -237,5 +252,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 30,
     backgroundColor: '#162c46',
+    marginTop: 10,
   },
 });
