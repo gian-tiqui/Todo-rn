@@ -1,8 +1,8 @@
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
 import React from 'react';
-import {ScoreContext} from './Quiz';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {ScoreContext} from '../navigation/Index';
 
 const Result = ({navigation}: {navigation: NavigationProp<any>}) => {
   const score = React.useContext(ScoreContext);
