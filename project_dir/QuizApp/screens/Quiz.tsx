@@ -120,7 +120,9 @@ const Quiz = ({navigation}: QuizProps) => {
   };
 
   const handleTimerEnd = () => {
-    handleSkip();
+    setTimeout(() => {
+      handleSkip();
+    }, 0);
   };
 
   return (
@@ -151,7 +153,7 @@ const Quiz = ({navigation}: QuizProps) => {
                       style={styles.optionButton}
                       onPress={handlePressCorrect}>
                       <Text style={styles.option}>
-                        {currentQuestion.correct_answer} correct
+                        {currentQuestion.correct_answer}
                       </Text>
                     </TouchableOpacity>
                   )}
