@@ -1,4 +1,4 @@
-import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {NavigationProp} from '@react-navigation/native';
 import axios from 'axios';
@@ -34,31 +34,34 @@ const Quiz = ({navigation}: QuizProps) => {
   const setScoreC = React.useContext(SetScoreContext);
 
   const checkAllAnswered = () => {
-    if (setScoreC !== undefined) {
-      setScoreC(score);
-    }
     return ques === 10;
   };
 
   const navigateResult = () => {
-    navigation.navigate('Result', {score});
+    if (setScoreC !== undefined) {
+      setScoreC(score);
+    }
+    navigation.navigate('Result');
   };
 
   const handlePressCorrect = () => {
     setAnswerMounted(false);
-    Alert.alert('Correct');
-    setScore(prevScore => prevScore + 1);
     setQues(prevQues => prevQues + 1);
     setCurrentQuestion(questions[ques - 1]);
 
-    if (checkAllAnswered()) {
-      navigateResult();
-    }
+    setScore(prevScore => {
+      const newScore = prevScore + 1;
+
+      if (checkAllAnswered()) {
+        navigateResult();
+      }
+
+      return newScore;
+    });
   };
 
   const handlePressWrong = () => {
     setAnswerMounted(false);
-    Alert.alert('Wrong');
     setQues(prevQues => prevQues + 1);
     setCurrentQuestion(questions[ques - 1]);
 
@@ -95,6 +98,9 @@ const Quiz = ({navigation}: QuizProps) => {
   }, [questions, ques]);
 
   const handlePressEnd = () => {
+    if (setScoreC !== undefined) {
+      setScoreC(score);
+    }
     navigation.navigate('Result');
   };
 
@@ -119,9 +125,8 @@ const Quiz = ({navigation}: QuizProps) => {
           <View style={styles.options}>
             {currentQuestion.incorrect_answers.map(
               (option: string, index: number) => (
-                <>
+                <View key={index}>
                   <TouchableOpacity
-                    key={index}
                     style={styles.optionButton}
                     onPress={handlePressWrong}>
                     <Text style={styles.option}>{option}</Text>
@@ -129,15 +134,14 @@ const Quiz = ({navigation}: QuizProps) => {
 
                   {randomNum === index && !answerMounted && (
                     <TouchableOpacity
-                      key={`correct_${index}`}
                       style={styles.optionButton}
                       onPress={handlePressCorrect}>
                       <Text style={styles.option}>
-                        {currentQuestion.correct_answer}
+                        {currentQuestion.correct_answer} correct
                       </Text>
                     </TouchableOpacity>
                   )}
-                </>
+                </View>
               ),
             )}
           </View>
@@ -153,7 +157,7 @@ const Quiz = ({navigation}: QuizProps) => {
           </View>
         </View>
       ) : (
-        <View>
+        <View style={styles.next}>
           <Text style={styles.buttonText}>
             No questions are available at the moment.
           </Text>
