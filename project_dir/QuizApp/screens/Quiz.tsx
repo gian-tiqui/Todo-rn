@@ -1,5 +1,5 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {NavigationProp} from '@react-navigation/native';
 import axios from 'axios';
 import {SetScoreContext} from '../navigation/Index';
@@ -19,10 +19,10 @@ type Question = {
 };
 
 const Quiz = ({navigation}: QuizProps) => {
-  const [questions, setQuestions] = React.useState([]);
-  const [ques, setQues] = React.useState<number>(1);
-  const [answerMounted, setAnswerMounted] = React.useState<boolean>(false);
-  const [currentQuestion, setCurrentQuestion] = React.useState<Question>({
+  const [questions, setQuestions] = useState([]);
+  const [ques, setQues] = useState<number>(1);
+  const [answerMounted, setAnswerMounted] = useState<boolean>(false);
+  const [currentQuestion, setCurrentQuestion] = useState<Question>({
     type: '',
     difficulty: '',
     category: '',
@@ -31,9 +31,9 @@ const Quiz = ({navigation}: QuizProps) => {
     incorrect_answers: [],
   });
 
-  const score = React.useRef<number>(0);
+  const score = useRef<number>(0);
 
-  const setScoreC = React.useContext(SetScoreContext);
+  const setScoreC = useContext(SetScoreContext);
 
   const checkAllAnswered = () => {
     return ques === 10;
@@ -73,7 +73,7 @@ const Quiz = ({navigation}: QuizProps) => {
     return Math.floor(Math.random() * 3);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const getQuiz = async () => {
       const API_URL =
         'https://opentdb.com/api.php?amount=10&difficulty=easy&type=multiple'; // add difficulty selection here later
@@ -90,7 +90,7 @@ const Quiz = ({navigation}: QuizProps) => {
     getQuiz();
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (questions.length > 0) {
       setCurrentQuestion(questions[ques - 1]);
     }

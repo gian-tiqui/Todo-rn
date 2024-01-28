@@ -1,11 +1,11 @@
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
-import React from 'react';
+import React, {useContext} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {ScoreContext} from '../navigation/Index';
 
 const Result = ({navigation}: {navigation: NavigationProp<any>}) => {
-  const score = React.useContext(ScoreContext);
+  const score = useContext(ScoreContext);
 
   const handlePressHome = () => {
     navigation.navigate('Home');

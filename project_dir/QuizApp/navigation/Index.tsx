@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, createContext} from 'react';
+import React, {Dispatch, SetStateAction, createContext, useState} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Home from '../screens/Home';
 import Quiz from '../screens/Quiz';
@@ -12,7 +12,7 @@ export const SetScoreContext = createContext<
 >(undefined);
 
 const Index = () => {
-  const [score, setScore] = React.useState<number>(0);
+  const [score, setScore] = useState<number>(0);
   return (
     <ScoreContext.Provider value={score}>
       <SetScoreContext.Provider value={setScore}>
