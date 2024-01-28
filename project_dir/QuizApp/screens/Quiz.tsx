@@ -20,7 +20,6 @@ type Question = {
 const Quiz = ({navigation}: QuizProps) => {
   const [questions, setQuestions] = React.useState([]);
   const [ques, setQues] = React.useState<number>(1);
-  const [score, setScore] = React.useState<number>(0);
   const [answerMounted, setAnswerMounted] = React.useState<boolean>(false);
   const [currentQuestion, setCurrentQuestion] = React.useState<Question>({
     type: '',
@@ -31,13 +30,16 @@ const Quiz = ({navigation}: QuizProps) => {
     incorrect_answers: [],
   });
 
+  let score: number = 0;
+
   const setScoreC = React.useContext(SetScoreContext);
 
   const checkAllAnswered = () => {
     return ques === 10;
   };
 
-  const navigateResult = () => {
+  const navigateResult = async () => {
+    await new Promise(resolve => setTimeout(resolve, 0));
     if (setScoreC !== undefined) {
       setScoreC(score);
     }
@@ -49,15 +51,11 @@ const Quiz = ({navigation}: QuizProps) => {
     setQues(prevQues => prevQues + 1);
     setCurrentQuestion(questions[ques - 1]);
 
-    setScore(prevScore => {
-      const newScore = prevScore + 1;
+    score++;
 
-      if (checkAllAnswered()) {
-        navigateResult();
-      }
-
-      return newScore;
-    });
+    if (checkAllAnswered()) {
+      navigateResult();
+    }
   };
 
   const handlePressWrong = () => {
