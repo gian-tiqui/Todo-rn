@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -16,10 +16,10 @@ type TodoRendererProps = {
 };
 
 const TodoScreen = () => {
-  const [todos, setTodos] = React.useState<Todo[]>([]);
-  const [todo, setTodo] = React.useState<string>('');
-  const [editMode, setEditMode] = React.useState<boolean>(false);
-  const [todoId, setTodoId] = React.useState<number>(0);
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todo, setTodo] = useState<string>('');
+  const [editMode, setEditMode] = useState<boolean>(false);
+  const [todoId, setTodoId] = useState<number>(0);
 
   const handleAddTodo = () => {
     if (!todo) {
